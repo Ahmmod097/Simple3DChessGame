@@ -10,26 +10,30 @@ public class Pawn : ChessMan
         bool[,] r = new bool[8, 8];
         ChessMan c, c2;
         int[] e = BoardManager.Instance.enPassantMove;
-
+        bool checkx = BoardManager.Instance.checkCheckAtAnyTime;
         // White team move
         if (isWhite)
         {
+            
             //Debug.Log(CurrentX);
             //Debug.Log(CurrentY);
 
             //Diagonal Left
             if (CurrentX !=0 && CurrentY != 7)
             {
+               
                 
-                if(e[0] == CurrentX-1 && e[1] == CurrentY + 1)
+                if(e[0] == CurrentX-1 && e[1] == CurrentY + 1 && checkx==false)
                 {
                     r[CurrentX - 1, CurrentY + 1] = true;
+                    
                 }
                
                 c = BoardManager.Instance.Chessmans[CurrentX - 1, CurrentY + 1];
                 
-                if(c!=null && !c.isWhite)
+                if(c!=null && !c.isWhite )
                 {
+                   
                     r[CurrentX - 1, CurrentY + 1] = true;
                 }
             }
@@ -37,13 +41,14 @@ public class Pawn : ChessMan
             //Diagonal Right
             if (CurrentX != 7 && CurrentY != 7)
             {
-                if (e[0] == CurrentX + 1 && e[1] == CurrentY + 1)
+                if (e[0] == CurrentX + 1 && e[1] == CurrentY + 1 && checkx == false)
                 {
                     r[CurrentX + 1, CurrentY + 1] = true;
                 }
                 c = BoardManager.Instance.Chessmans[CurrentX + 1, CurrentY + 1];
                 if (c != null && !c.isWhite)
                 {
+                   
                     r[CurrentX + 1, CurrentY + 1] = true;
                 }
             }
@@ -75,7 +80,7 @@ public class Pawn : ChessMan
             //Diagonal Left
             if (CurrentX != 0 && CurrentY != 0)
             {
-                if (e[0] == CurrentX - 1 && e[1] == CurrentY - 1)
+                if (e[0] == CurrentX - 1 && e[1] == CurrentY - 1 && checkx == false)
                 {
                     r[CurrentX - 1, CurrentY - 1] = true;
                 }
@@ -89,7 +94,7 @@ public class Pawn : ChessMan
             //Diagonal Right
             if (CurrentX != 7 && CurrentY != 0)
             {
-                if (e[0] == CurrentX + 1 && e[1] == CurrentY - 1)
+                if (e[0] == CurrentX + 1 && e[1] == CurrentY - 1 && checkx == false)
                 {
                     r[CurrentX + 1, CurrentY - 1] = true;
                 }

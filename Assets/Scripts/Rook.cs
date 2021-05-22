@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Rook : ChessMan
 {
-   
+    public static Rook Instance { set; get; }
+
     public override bool[,] PossibleMove()
     {
         bool[,] r = new bool[8, 8];

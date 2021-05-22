@@ -18,6 +18,7 @@ public class King : ChessMan
         bool blackKingMoveCount = BoardManager.Instance.countBlackKingMove;
         bool blackRightRookMoveCount = BoardManager.Instance.countBlackRightRookMove;
         bool blackLeftRookMoveCount = BoardManager.Instance.countBlackLeftRookMove;
+        bool whiteKingCastlingCheck = BoardManager.Instance.checkForCastling;
 
         int i, j;
 
@@ -99,7 +100,7 @@ public class King : ChessMan
 
          //Castling Move For White King
         
-        if (CurrentX == 4 && CurrentY == 0 && checkWhiteCastling==true) //Only Applicable for White king left side castling
+        if (CurrentX == 4 && CurrentY == 0 && checkWhiteCastling==true && whiteKingCastlingCheck==false) //Only Applicable for White king left side castling
         {
            
 
@@ -116,11 +117,11 @@ public class King : ChessMan
                 r[CurrentX + 2, CurrentY] = true;
 
             }
-            else if(c3 == null && c4 == null && whiteRightRookMoveCount == false)
+            else if(c3 == null && c4 == null && whiteRightRookMoveCount == false && whiteKingMoveCount == false)
             {
                 r[CurrentX + 2, CurrentY] = true;
             }
-            else if(c == null && c1 == null && c2 == null && whiteLeftRookMoveCount == false)
+            else if(c == null && c1 == null && c2 == null && whiteLeftRookMoveCount == false && whiteKingMoveCount == false)
             {
                 r[CurrentX - 2, CurrentY] = true;
             }
@@ -145,11 +146,11 @@ public class King : ChessMan
                 r[CurrentX + 2, CurrentY] = true;
 
             }
-            else if (c3 == null && c4 == null && blackRightRookMoveCount == false)
+            else if (c3 == null && c4 == null && blackRightRookMoveCount == false && blackKingMoveCount == false)
             {
                 r[CurrentX + 2, CurrentY] = true;
             }
-            else if (c == null && c1 == null && c2 == null && blackLeftRookMoveCount == false)
+            else if (c == null && c1 == null && c2 == null && blackLeftRookMoveCount == false && blackKingMoveCount == false)
             {
                 r[CurrentX - 2, CurrentY] = true;
             }
