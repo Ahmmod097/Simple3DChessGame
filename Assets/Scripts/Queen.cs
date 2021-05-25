@@ -7,117 +7,57 @@ public class Queen : ChessMan
     public override bool[,] PossibleMove()
     {
         bool[,] r = new bool[8, 8];
-        ChessMan c;
+
         int i, j;
+
+        // Top left
         i = CurrentX;
         j = CurrentY;
-
-        //TopLeft
         while (true)
         {
             i--;
             j++;
-            if (i < 0 || j >= 8)
-            {
-                break;
-            }
-            c = BoardManager.Instance.Chessmans[i, j];
-            if (c == null)
-            {
-                r[i, j] = true;
-            }
-            else
-            {
-                if (isWhite != c.isWhite)
-                {
-                    r[i, j] = true;
-                }
-                break;
-            }
+            if (i < 0 || j >= 8) break;
 
+            if (Move(i, j, ref r)) break;
         }
 
-        //TopRight
+        // Top right
         i = CurrentX;
         j = CurrentY;
         while (true)
         {
             i++;
             j++;
-            if (i >= 8 || j >= 8)
-            {
-                break;
-            }
-            c = BoardManager.Instance.Chessmans[i, j];
-            if (c == null)
-            {
-                r[i, j] = true;
-            }
-            else
-            {
-                if (isWhite != c.isWhite)
-                {
-                    r[i, j] = true;
-                }
-                break;
-            }
+            if (i >= 8 || j >= 8) break;
 
+            if (Move(i, j, ref r)) break;
         }
 
-        //DownLeft
+        // Down left
         i = CurrentX;
         j = CurrentY;
         while (true)
         {
             i--;
             j--;
-            if (i < 0 || j < 0)
-            {
-                break;
-            }
-            c = BoardManager.Instance.Chessmans[i, j];
-            if (c == null)
-            {
-                r[i, j] = true;
-            }
-            else
-            {
-                if (isWhite != c.isWhite)
-                {
-                    r[i, j] = true;
-                }
-                break;
-            }
+            if (i < 0 || j < 0) break;
 
+            if (Move(i, j, ref r)) break;
         }
 
-        //DownRight
+        // Down right
         i = CurrentX;
         j = CurrentY;
         while (true)
         {
             i++;
             j--;
-            if (i >= 8 || j < 0)
-            {
-                break;
-            }
-            c = BoardManager.Instance.Chessmans[i, j];
-            if (c == null)
-            {
-                r[i, j] = true;
-            }
-            else
-            {
-                if (isWhite != c.isWhite)
-                {
-                    r[i, j] = true;
-                }
-                break;
-            }
+            if (i >= 8 || j < 0) break;
 
-
+            if (Move(i, j, ref r)) break;
         }
+
         // Right
         i = CurrentX;
         while (true)

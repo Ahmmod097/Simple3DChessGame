@@ -6,6 +6,7 @@ TagManager:
   tags:
   - KingWhite
   - KingBlack
+  - QueenBlack
   layers:
   - Default
   - TransparentFX

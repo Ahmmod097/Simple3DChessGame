@@ -18,8 +18,9 @@ public class King : ChessMan
         bool blackKingMoveCount = BoardManager.Instance.countBlackKingMove;
         bool blackRightRookMoveCount = BoardManager.Instance.countBlackRightRookMove;
         bool blackLeftRookMoveCount = BoardManager.Instance.countBlackLeftRookMove;
-        bool whiteKingCastlingCheck = BoardManager.Instance.checkForCastling;
-
+        bool kingCastlingCheck = BoardManager.Instance.castleCheck;
+        bool kingCastlingCheckAt2_0 = BoardManager.Instance.castleCheckAt2_0;
+        bool kingCastlingCheckAt6_0 = BoardManager.Instance.castleCheckAt6_0;
         int i, j;
 
          //TopSide
@@ -98,12 +99,13 @@ public class King : ChessMan
              }
          }
 
-         //Castling Move For White King
-        
-        if (CurrentX == 4 && CurrentY == 0 && checkWhiteCastling==true && whiteKingCastlingCheck==false) //Only Applicable for White king left side castling
+        //Debug.Log( whiteKingCastlingCheck);
+        //Castling Move For White King
+       
+        if (CurrentX == 4 && CurrentY == 0 && checkWhiteCastling==true && kingCastlingCheck == false) //&& whiteKingCastlingCheck == false) //Only Applicable for White king left side castling
         {
-           
 
+            
             c = BoardManager.Instance.Chessmans[CurrentX - 1, CurrentY];
             c1 = BoardManager.Instance.Chessmans[CurrentX - 2, CurrentY];
             c2 = BoardManager.Instance.Chessmans[CurrentX - 3, CurrentY];
@@ -111,17 +113,20 @@ public class King : ChessMan
             c4 = BoardManager.Instance.Chessmans[CurrentX + 2, CurrentY];
             
             if ((c == null && c1 == null && c2 == null) && (c3 == null && c4 == null) &&
-                whiteKingMoveCount == false && whiteRightRookMoveCount == false && whiteLeftRookMoveCount == false)
+                whiteKingMoveCount == false && whiteRightRookMoveCount == false && whiteLeftRookMoveCount == false &&
+                kingCastlingCheckAt2_0 == false && kingCastlingCheckAt6_0 == false)
             {
                 r[CurrentX - 2, CurrentY] = true;
                 r[CurrentX + 2, CurrentY] = true;
 
             }
-            else if(c3 == null && c4 == null && whiteRightRookMoveCount == false && whiteKingMoveCount == false)
+            else if(c3 == null && c4 == null && whiteRightRookMoveCount == false && whiteKingMoveCount == false 
+               && kingCastlingCheckAt6_0 == false)
             {
                 r[CurrentX + 2, CurrentY] = true;
             }
-            else if(c == null && c1 == null && c2 == null && whiteLeftRookMoveCount == false && whiteKingMoveCount == false)
+            else if(c == null && c1 == null && c2 == null && whiteLeftRookMoveCount == false && whiteKingMoveCount == false 
+                && kingCastlingCheckAt2_0 == false)
             {
                 r[CurrentX - 2, CurrentY] = true;
             }
@@ -129,7 +134,7 @@ public class King : ChessMan
 
         //Castling Move For Black  King
 
-        if (CurrentX == 4 && CurrentY == 7 && checkBlackCastling == true) //Only Applicable for White king left side castling
+        if (CurrentX == 4 && CurrentY == 7 && checkBlackCastling == true && kingCastlingCheck == false) //Only Applicable for White king left side castling
         {
 
 
@@ -140,17 +145,20 @@ public class King : ChessMan
             c4 = BoardManager.Instance.Chessmans[CurrentX + 2, CurrentY];
 
             if ((c == null && c1 == null && c2 == null) && (c3 == null && c4 == null) &&
-                blackKingMoveCount == false && blackRightRookMoveCount == false && blackLeftRookMoveCount == false)
+                blackKingMoveCount == false && blackRightRookMoveCount == false && blackLeftRookMoveCount == false
+                && kingCastlingCheckAt2_0 == false && kingCastlingCheckAt6_0 == false)
             {
                 r[CurrentX - 2, CurrentY] = true;
                 r[CurrentX + 2, CurrentY] = true;
 
             }
-            else if (c3 == null && c4 == null && blackRightRookMoveCount == false && blackKingMoveCount == false)
+            else if (c3 == null && c4 == null && blackRightRookMoveCount == false && 
+                blackKingMoveCount == false &&  kingCastlingCheckAt6_0 == false)
             {
                 r[CurrentX + 2, CurrentY] = true;
             }
-            else if (c == null && c1 == null && c2 == null && blackLeftRookMoveCount == false && blackKingMoveCount == false)
+            else if (c == null && c1 == null && c2 == null && blackLeftRookMoveCount == false && blackKingMoveCount == false
+                && kingCastlingCheckAt2_0 == false)
             {
                 r[CurrentX - 2, CurrentY] = true;
             }

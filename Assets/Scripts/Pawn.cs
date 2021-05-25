@@ -11,6 +11,8 @@ public class Pawn : ChessMan
         ChessMan c, c2;
         int[] e = BoardManager.Instance.enPassantMove;
         bool checkx = BoardManager.Instance.checkCheckAtAnyTime;
+        bool checkPawn = BoardManager.Instance.pawnCheck;
+        
         // White team move
         if (isWhite)
         {
@@ -46,7 +48,7 @@ public class Pawn : ChessMan
                     r[CurrentX + 1, CurrentY + 1] = true;
                 }
                 c = BoardManager.Instance.Chessmans[CurrentX + 1, CurrentY + 1];
-                if (c != null && !c.isWhite)
+                if (c != null && !c.isWhite )
                 {
                    
                     r[CurrentX + 1, CurrentY + 1] = true;
@@ -85,7 +87,7 @@ public class Pawn : ChessMan
                     r[CurrentX - 1, CurrentY - 1] = true;
                 }
                 c = BoardManager.Instance.Chessmans[CurrentX - 1, CurrentY - 1];
-                if (c != null && c.isWhite)
+                if (c != null && c.isWhite )
                 {
                     r[CurrentX - 1, CurrentY - 1] = true;
                 }
@@ -99,7 +101,7 @@ public class Pawn : ChessMan
                     r[CurrentX + 1, CurrentY - 1] = true;
                 }
                 c = BoardManager.Instance.Chessmans[CurrentX + 1, CurrentY - 1];
-                if (c != null && c.isWhite)
+                if (c != null && c.isWhite )
                 {
                     r[CurrentX + 1, CurrentY - 1] = true;
                 }

@@ -9,15 +9,15 @@ public class BoardManager : MonoBehaviour
     private bool[,] availableMoves { set; get; }
 
     private const float Title_size = 1.0f;
-    private const float Title_offset = 0.5f ; // half size of title_size
+    private const float Title_offset = 0.5f; // half size of title_size
     private int selectionX = -1;
     private int selectionY = -1;
     public List<GameObject> ChessPieces;
-    private List<GameObject> activechessman ;
+    private List<GameObject> activechessman;
     private List<ChessMan> Pieces;
     public ChessMan[,] Chessmans { set; get; } //This is Chess Board
     private ChessMan selectedChessman; //Which piece or chess man is currently selected
-    
+
     public bool isWhiteturn = true;
     public int[] enPassantMove; //Make This Accesible for our pawns
     public GameObject whiteWin;
@@ -30,97 +30,101 @@ public class BoardManager : MonoBehaviour
     public bool countWhiteKingMove = false;
     public bool countWhiteLeftRookMove = false;
     public bool countWhiteRightRookMove = false;
-    public bool checkForCastling = true;
+    
     public bool checkCheckAtAnyTime = false;
+    public bool castleCheck = false;
+    public bool castleCheckAt6_0 = false;
+    public bool castleCheckAt2_0 = false;
+    public bool pawnCheck = false;
 
     public bool isBlackCastling = true;
     public bool countBlackKingMove = false;
     public bool countBlackLeftRookMove = false;
     public bool countBlackRightRookMove = false;
 
-    
+
 
     private void Start() //This method is used to create black and white chessman on the chess board
     {
         Instance = this;
-       
+
         SpawnAllChessMan();
 
-        
+
 
     }
-    private  void Update()
+    private void Update()
     {
         UpdateSelection();
         DrawChessBoard(); //Create The Chess Board
-       
+
 
         if (Input.GetMouseButtonDown(0))
         {
-            
-            if (selectionX >=0 && selectionY >= 0)
+
+            if (selectionX >= 0 && selectionY >= 0)
             {
-                
+
                 if (selectedChessman == null)
                 {
 
 
                     SelectChessMan(selectionX, selectionY); //Used to select the square in the board where we want our chess piece to go
-                   
-                    
+
+
                 }
                 else
                 {
 
-                   
-                    
+
+
                     MoveChessMan(selectionX, selectionY); //Move the Chessman to our desired position
-                    
+
                 }
             }
-            
+
         }
-      
+
     }
 
     //Used to select the square in the board where we want our chess piece to go
     private void SelectChessMan(int x, int y)
     {
-       
-       
-            if (Chessmans[x, y] == null)
-            {
-                return;
-            }
-            if (Chessmans[x, y].isWhite != isWhiteturn)
-            {
-                return;
-            }
-            bool hasatLeastOnemove = false;
 
-            allowedMoves = Chessmans[x, y].PossibleMove();
 
-            for (int i = 0; i < 8; i++)
+        if (Chessmans[x, y] == null)
+        {
+            return;
+        }
+        if (Chessmans[x, y].isWhite != isWhiteturn)
+        {
+            return;
+        }
+        bool hasatLeastOnemove = false;
+
+        allowedMoves = Chessmans[x, y].PossibleMove();
+
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
             {
-                for (int j = 0; j < 8; j++)
+                if (allowedMoves[i, j])
                 {
-                    if (allowedMoves[i, j])
-                    {
-                        hasatLeastOnemove = true;
-                    }
+                    hasatLeastOnemove = true;
                 }
             }
-            if (!hasatLeastOnemove)
-            {
-                return;
-            }
+        }
+        if (!hasatLeastOnemove)
+        {
+            return;
+        }
 
-            selectedChessman = Chessmans[x, y];
+        selectedChessman = Chessmans[x, y];
         
 
 
-            BoardHighlight.Instance.HighLightAllowedMoves(allowedMoves);
-       
+        BoardHighlight.Instance.HighLightAllowedMoves(allowedMoves);
+
 
 
     }
@@ -128,15 +132,16 @@ public class BoardManager : MonoBehaviour
     //Move the Chessman to our desired position
     private void MoveChessMan(int x, int y)
     {
-      
-        if (allowedMoves[x,y])
+
+        if (allowedMoves[x, y])
         {
-            
+            int ans = 1;
             ChessMan c = Chessmans[x, y];
-           
-            if (c!=null && c.isWhite != isWhiteturn)
+
+            if (c != null && c.isWhite != isWhiteturn )
             {
-               
+                int tx = c.CurrentX;
+                int ty = c.CurrentY;
                 //kill the enemy
 
                 //if it is the king
@@ -146,20 +151,23 @@ public class BoardManager : MonoBehaviour
                     Endgame();
                     return;
                 }
+               
                 activechessman.Remove(c.gameObject);
                 Pieces.Remove(c);
                 Destroy(c.gameObject);
-            }
-            
-
-            if(x==enPassantMove[0] && y == enPassantMove[1] && checkCheckAtAnyTime== false)
-            {
                 
+                
+            }
+
+
+            if (x == enPassantMove[0] && y == enPassantMove[1] && checkCheckAtAnyTime == false)
+            {
+
 
                 if (isWhiteturn)
                 {
                     c = Chessmans[x, y - 1];
-                   
+
                 }
                 else
                 {
@@ -172,7 +180,7 @@ public class BoardManager : MonoBehaviour
             enPassantMove[0] = -1;
             enPassantMove[1] = -1;
 
-            if (selectedChessman.GetType () == typeof(Pawn)) //Check our current selected chess man is pawn or not
+            if (selectedChessman.GetType() == typeof(Pawn)) //Check our current selected chess man is pawn or not
             {
                 checkCheckAtAnyTime = isCheck();
 
@@ -181,7 +189,7 @@ public class BoardManager : MonoBehaviour
                     activechessman.Remove(selectedChessman.gameObject);
                     Pieces.Remove(selectedChessman);
                     Destroy(selectedChessman.gameObject);
-                    SpawnChessMan(1, x,y); // Spawn Promoted To Queen
+                    SpawnChessMan(1, x, y); // Spawn Promoted To Queen
                     selectedChessman = Chessmans[x, y];
                 }
                 else if (y == 0)
@@ -206,20 +214,20 @@ public class BoardManager : MonoBehaviour
 
             if (selectedChessman.GetType() == typeof(Rook)) //Check if this is the first move for Rook which helps to find if castling is possible or not
             {
-                if(selectedChessman.CurrentY == 0 && selectedChessman.CurrentX == 0) //White Rook
+                if (selectedChessman.CurrentY == 0 && selectedChessman.CurrentX == 0) //White Rook
                 {
                     countWhiteLeftRookMove = true;
-                    
+
                 }
-                else if(selectedChessman.CurrentY == 0 && selectedChessman.CurrentX == 7)
+                else if (selectedChessman.CurrentY == 0 && selectedChessman.CurrentX == 7)
                 {
                     countWhiteRightRookMove = true;
-                   
+
                 }
                 else if (selectedChessman.CurrentY == 7 && selectedChessman.CurrentX == 0)
                 {
                     countBlackLeftRookMove = true;
-                   
+
                 }
                 else if (selectedChessman.CurrentY == 7 && selectedChessman.CurrentX == 7)
                 {
@@ -229,19 +237,19 @@ public class BoardManager : MonoBehaviour
 
             }
 
-                //Castling Trying For White King
-                if (selectedChessman.GetType() == typeof(King) ) // To check if king piece is clicked or not
-                {
-                
+            //Castling Trying For White King
+            if (selectedChessman.GetType() == typeof(King)) // To check if king piece is clicked or not
+            {
+
                 if (selectedChessman.CurrentY == 0 && selectedChessman.CurrentX == 4)
                 {
-                    
+
                     countWhiteKingMove = true;
-                    checkForCastling = isCheck();
+                    
 
                     if (x == 2 && y == 0)
                     {
-                       
+
                         c = Chessmans[0, 0];
                         if (c.GetType() == typeof(Rook))
                         {
@@ -251,7 +259,7 @@ public class BoardManager : MonoBehaviour
 
                             //Delete the Rook object
 
-                            
+
                             activechessman.Remove(c.gameObject);
                             Pieces.Remove(c);
                             Destroy(c.gameObject);
@@ -273,42 +281,42 @@ public class BoardManager : MonoBehaviour
                     {
                         countKingMove = true;
                     }*/
-                
 
-                else if (x == 6 && y == 0)
-                {
-                    c = Chessmans[7, 0];
-                    if (c.GetType() == typeof(Rook))
+
+                    else if (x == 6 && y == 0)
                     {
-                        SpawnChessMan(2, x - 1, y);
+                        c = Chessmans[7, 0];
+                        if (c.GetType() == typeof(Rook))
+                        {
+                            SpawnChessMan(2, x - 1, y);
 
 
-                        //Delete the Rook object
+                            //Delete the Rook object
 
-                       
-                        activechessman.Remove(c.gameObject);
+
+                            activechessman.Remove(c.gameObject);
                             Pieces.Remove(c);
                             Destroy(c.gameObject);
 
-                        // DeletePiece();
-                        ///countWhiteKingMove = true; // So that once you moved your king, you cant do castling
-                        //countWhiteRightRookMove = true; // So that once you moved your rook, you cant do castling
-                        //countWhiteLeftRookMove = true;
+                            // DeletePiece();
+                            ///countWhiteKingMove = true; // So that once you moved your king, you cant do castling
+                            //countWhiteRightRookMove = true; // So that once you moved your rook, you cant do castling
+                            //countWhiteLeftRookMove = true;
                         }
-                    else
-                    {
-                        
-                        Debug.Log("You can't do castling");
-                        isWhiteCastling = false;
+                        else
+                        {
+
+                            Debug.Log("You can't do castling");
+                            isWhiteCastling = false;
+                        }
                     }
-                }
                     else
                     {
                         countWhiteKingMove = true;
                     }
 
                 }
-                
+
 
             }
 
@@ -364,7 +372,7 @@ public class BoardManager : MonoBehaviour
 
                             //Delete the Rook object
 
-                            
+
                             activechessman.Remove(c.gameObject);
                             Pieces.Remove(c);
                             Destroy(c.gameObject);
@@ -391,47 +399,47 @@ public class BoardManager : MonoBehaviour
 
 
 
-            
-            
+
+
 
             //Checking Check 
             bool b = isWhiteturn;
             if (!isCheck())
             {
-               
+
                 if (b)
                 {
-                   
+
                     whiteCheck.SetActive(false);
                     int tx = selectedChessman.CurrentX;
                     int ty = selectedChessman.CurrentY;
-                   
+
                     Chessmans[selectedChessman.CurrentX, selectedChessman.CurrentY] = null;
-                    
+
                     selectedChessman.transform.position = getTitlecenter(x, y);
                     selectedChessman.SetPosition(x, y); //We get the selected position x and position y
-                    
+
                     Chessmans[x, y] = selectedChessman;
 
-                    
+
                     if (isCheck())
                     {
                         Destroy(selectedChessman.gameObject);
                         createWhitePiece(selectedChessman, tx, ty);
-                        
+
                         isWhiteturn = b;
 
 
-                      
+
                     }
                     else
                     {
-                        
+
                         isWhiteturn = !b;
                     }
-                   
-                    
-                    
+
+
+
                 }
                 else
                 {
@@ -460,10 +468,10 @@ public class BoardManager : MonoBehaviour
             }
             else
             {
-                
+
                 if (b)
                 {
-                    
+
                     whiteCheck.SetActive(true);
                     int tx = selectedChessman.CurrentX;
                     int ty = selectedChessman.CurrentY;
@@ -471,29 +479,30 @@ public class BoardManager : MonoBehaviour
                     selectedChessman.transform.position = getTitlecenter(x, y);
                     selectedChessman.SetPosition(x, y); //We get the selected position x and position y
                     Chessmans[x, y] = selectedChessman;
-                    
+
                     isCheck();
                     if (isCheck() == false)
                     {
                         whiteCheck.SetActive(false);
                         isWhiteturn = !b;
                     }
-                    else {
-                        
-                        
+                    else
+                    {
+
+
                         Destroy(selectedChessman.gameObject);
-                        
+
                         createWhitePiece(selectedChessman, tx, ty);
-                        
+
                         isWhiteturn = b;
                     }
-                    
+
 
 
                 }
                 else
                 {
-                    
+
                     blackCheck.SetActive(true);
                     int tx = selectedChessman.CurrentX;
                     int ty = selectedChessman.CurrentY;
@@ -526,14 +535,20 @@ public class BoardManager : MonoBehaviour
             //isWhiteturn = !isWhiteturn;
             if (isCheck())
             {
-                
+
                 if (isWhiteturn)
                 {
+                    
                     whiteCheck.SetActive(true);
+                    castleCheck = true;
+                    
                 }
                 else
                 {
+                    
                     blackCheck.SetActive(true);
+                    castleCheck = true;
+                    
                 }
 
             }
@@ -543,13 +558,21 @@ public class BoardManager : MonoBehaviour
                 if (isWhiteturn)
                 {
                     whiteCheck.SetActive(false);
+                    castleCheck = false;
+                    castleCheckAt2_0 = isCheckAt_2_0_Position();
+                    castleCheckAt6_0 = isCheckAt_6_0_Position();
+                    
                 }
                 else
                 {
                     blackCheck.SetActive(false);
+                    castleCheck = false;
+                    castleCheckAt2_0 = isCheckAt_2_0_Position();
+                    castleCheckAt6_0 = isCheckAt_6_0_Position();
+                    
                 }
             }
-            
+
         }
         BoardHighlight.Instance.Hidehighlights();
         selectedChessman = null;
@@ -562,7 +585,8 @@ public class BoardManager : MonoBehaviour
             return;
         }
         RaycastHit hit;
-        if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),out hit , 25.0f, LayerMask.GetMask("Plane"))){
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 25.0f, LayerMask.GetMask("Plane")))
+        {
             selectionX = (int)hit.point.x;
             selectionY = (int)hit.point.z;
         }
@@ -579,7 +603,7 @@ public class BoardManager : MonoBehaviour
         //Test
         ChessMan cm;
         //Finish
-        GameObject go = Instantiate(ChessPieces[index], getTitlecenter(x,y),  Quaternion.Euler(-90,0,-90)) as GameObject;
+        GameObject go = Instantiate(ChessPieces[index], getTitlecenter(x, y), Quaternion.Euler(-90, 0, -90)) as GameObject;
         go.name = ChessPieces[index].name;
         go.transform.SetParent(transform);
 
@@ -592,7 +616,7 @@ public class BoardManager : MonoBehaviour
         //Debug.Log(Chessmans[x, y].CurrentX);
         //Debug.Log(Chessmans[x, y].CurrentY);
         activechessman.Add(go);
-        
+
         //Test
         Pieces.Add(cm);
         //Finish
@@ -656,7 +680,7 @@ public class BoardManager : MonoBehaviour
         SpawnChessMan(4, 6, 0);
 
         //Pawn
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
         {
             SpawnChessMan(5, i, 1);
         }
@@ -687,7 +711,7 @@ public class BoardManager : MonoBehaviour
             SpawnChessManBlack(11, i, 6);
         }
     }
-   
+
     //Used to place the chess piece or chess man at the center of a square
     private Vector3 getTitlecenter(int x, int y)
     {
@@ -702,18 +726,18 @@ public class BoardManager : MonoBehaviour
     {
         Vector3 widthLine = Vector3.right * 8;
         Vector3 forwardLine = Vector3.forward * 8;
-        for(int i = 0; i <= 8; i++)
+        for (int i = 0; i <= 8; i++)
         {
             Vector3 start = Vector3.forward * i;
             Debug.DrawLine(start, start + widthLine);
-            
-            for (int j = 0; j <=8; j++)
+
+            for (int j = 0; j <= 8; j++)
             {
                 start = Vector3.right * j;
                 Debug.DrawLine(start, start + forwardLine);
             }
         }
-        if(selectionX >=0 && selectionY >= 0)
+        if (selectionX >= 0 && selectionY >= 0)
         {
             Debug.DrawLine(Vector3.forward * selectionY + Vector3.right * selectionX, Vector3.forward * (selectionY + 1) + Vector3.right * (selectionX + 1));
             Debug.DrawLine(Vector3.forward * (selectionY + 1) + Vector3.right * selectionX, Vector3.forward * selectionY + Vector3.right * (selectionX + 1));
@@ -725,7 +749,7 @@ public class BoardManager : MonoBehaviour
     {
         if (isWhiteturn)
         {
-           
+
             whiteWin.SetActive(true);
             Debug.Log("White Team Wins!!");
         }
@@ -755,36 +779,36 @@ public class BoardManager : MonoBehaviour
         SpawnAllChessMan();
     }
 
-    
+
 
     // Get king's Position 
     public bool isCheck()
     {
-       
+
 
         if (isWhiteturn)
         {
             GameObject ob = GameObject.FindGameObjectWithTag("KingWhite");
 
-            int PosX = (int) ((int)ob.transform.position.x );
-            int PosY = (int) ((int)ob.transform.position.z );
+            int PosX = (int)((int)ob.transform.position.x);
+            int PosY = (int)((int)ob.transform.position.z);
 
             //allowedMoves = Chessmans[PosX, PosY].PossibleMove();
-           
 
-            for (int i = 16 ; i <Pieces.Count; i++)
+
+            for (int i = (Pieces.Count) / 2; i < Pieces.Count; i++)
             {
                 ChessMan piece = Pieces[i];
-                
+
                 availableMoves = piece.PossibleMove();
 
                 if (availableMoves[PosX, PosY])
                 {
 
                     Debug.Log("White King is in Check");
-                    
+
                     return true;
-                   
+
                 }
             }
         }
@@ -796,7 +820,7 @@ public class BoardManager : MonoBehaviour
             int PosY = (int)((int)ob.transform.position.z);
 
             //allowedMoves = Chessmans[PosX, PosY].PossibleMove();
-            for (int i = 0; i < (Pieces.Count)/2; i++)
+            for (int i = 0; i < (Pieces.Count) / 2; i++)
             {
                 ChessMan piece = Pieces[i];
                 availableMoves = piece.PossibleMove();
@@ -805,7 +829,7 @@ public class BoardManager : MonoBehaviour
                 {
 
                     Debug.Log("Black King is in Check");
-                    
+
                     return true;
 
                 }
@@ -830,7 +854,7 @@ public class BoardManager : MonoBehaviour
             whiteCheck.SetActive(false);
             blackCheck.SetActive(false);
             whiteWin.SetActive(true);
-            
+
             Debug.Log("White Team Wins!!");
         }
     }
@@ -843,20 +867,20 @@ public class BoardManager : MonoBehaviour
         for (int i = 0; i < ChessPieces.Count; i++)
         {
             s1 = ch.gameObject.name;
-          
+
             s2 = ChessPieces[i].name;
-          
+
             if (s1 == s2)
             {
-                
+
                 index12 = i;
             }
         }
-        
+
 
         SpawnChessMan(index12, posX, posY);
-        
-        
+
+
     }
     private void createBlackPiece(ChessMan ch, int posX, int posY)
     {
@@ -872,12 +896,148 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-       
+
 
         SpawnChessManBlack(index12, posX, posY);
 
 
     }
 
-}
+    public bool isCheckAt_2_0_Position()
+    {
 
+
+        if (isWhiteturn)
+        {
+           
+
+            int PosX1 = 3;
+            int PosY1 = 0;
+            int PosX2 = 2;
+            int PosY2 = 0;
+
+            //allowedMoves = Chessmans[PosX, PosY].PossibleMove();
+
+
+            for (int i = (Pieces.Count) / 2; i < Pieces.Count; i++)
+            {
+                ChessMan piece = Pieces[i];
+
+                availableMoves = piece.PossibleMove();
+
+                if (availableMoves[PosX1, PosY1] || availableMoves[PosX2, PosY2])
+                {
+
+
+                    return true;
+
+                }
+
+
+            }
+            return false;
+        }
+        else
+        {
+            
+
+            int PosX1 = 3;
+            int PosY1 = 7;
+            int PosX2 = 2;
+            int PosY2 = 7;
+
+            //allowedMoves = Chessmans[PosX, PosY].PossibleMove();
+
+
+            for (int i =0; i < (Pieces.Count) / 2; i++)
+            {
+                ChessMan piece = Pieces[i];
+
+                availableMoves = piece.PossibleMove();
+
+                if (availableMoves[PosX1, PosY1] || availableMoves[PosX2, PosY2])
+                {
+
+
+                    return true;
+
+                }
+
+
+            }
+            return false;
+        } 
+
+       
+    }
+
+    public bool isCheckAt_6_0_Position()
+    {
+
+
+        if (isWhiteturn)
+        {
+            
+
+            int PosX1 = 5;
+            int PosY1 = 0;
+            int PosX2 = 6;
+            int PosY2 = 0;
+
+            //allowedMoves = Chessmans[PosX, PosY].PossibleMove();
+
+
+            for (int i = (Pieces.Count) / 2; i < Pieces.Count; i++)
+            {
+                ChessMan piece = Pieces[i];
+
+                availableMoves = piece.PossibleMove();
+
+                if (availableMoves[PosX1, PosY1] || availableMoves[PosX2, PosY2])
+                {
+
+
+                    return true;
+
+                }
+
+
+            }
+            return false;
+        }
+        else
+        {
+
+
+            int PosX1 = 5;
+            int PosY1 = 7;
+            int PosX2 = 6;
+            int PosY2 = 7;
+
+            //allowedMoves = Chessmans[PosX, PosY].PossibleMove();
+
+
+            for (int i = 0; i < (Pieces.Count) / 2; i++)
+            {
+                ChessMan piece = Pieces[i];
+
+                availableMoves = piece.PossibleMove();
+
+                if (availableMoves[PosX1, PosY1] || availableMoves[PosX2, PosY2])
+                {
+
+
+                    return true;
+
+                }
+
+
+            }
+            return false;
+        }
+       
+
+
+    }
+
+}
