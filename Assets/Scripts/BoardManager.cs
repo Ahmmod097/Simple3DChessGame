@@ -19,6 +19,7 @@ public class BoardManager : MonoBehaviour
     private ChessMan selectedChessman; //Which piece or chess man is currently selected
 
     public bool isWhiteturn = true;
+    public bool isBlackturn = true;
     public int[] enPassantMove; //Make This Accesible for our pawns
     public GameObject whiteWin;
     public GameObject blackWin;
@@ -61,7 +62,7 @@ public class BoardManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-
+            
             if (selectionX >= 0 && selectionY >= 0)
             {
 
@@ -101,7 +102,7 @@ public class BoardManager : MonoBehaviour
             return;
         }
         bool hasatLeastOnemove = false;
-
+        
         allowedMoves = Chessmans[x, y].PossibleMove();
 
         for (int i = 0; i < 8; i++)
@@ -135,13 +136,14 @@ public class BoardManager : MonoBehaviour
 
         if (allowedMoves[x, y])
         {
-            int ans = 1;
+           
+            int ans = 0;
             ChessMan c = Chessmans[x, y];
-
-            if (c != null && c.isWhite != isWhiteturn )
+            
+            
+            if (c != null && c.isWhite != isWhiteturn)
             {
-                int tx = c.CurrentX;
-                int ty = c.CurrentY;
+                
                 //kill the enemy
 
                 //if it is the king
@@ -155,6 +157,8 @@ public class BoardManager : MonoBehaviour
                 activechessman.Remove(c.gameObject);
                 Pieces.Remove(c);
                 Destroy(c.gameObject);
+                Debug.Log(isCheck());
+                Debug.Log(ans);
                 
                 
             }
@@ -413,20 +417,35 @@ public class BoardManager : MonoBehaviour
                     whiteCheck.SetActive(false);
                     int tx = selectedChessman.CurrentX;
                     int ty = selectedChessman.CurrentY;
-
+                   
                     Chessmans[selectedChessman.CurrentX, selectedChessman.CurrentY] = null;
 
                     selectedChessman.transform.position = getTitlecenter(x, y);
                     selectedChessman.SetPosition(x, y); //We get the selected position x and position y
-
+                                                        //Debug.Log(Chessmans[x, y]);
+                    
+                    ChessMan blackPiece;
+                    if (Chessmans[x, y] != null )
+                    {
+                        blackPiece = Chessmans[x, y] ;
+                    }
+                    else
+                    {
+                        blackPiece = null;
+                        //Destroy(selectedChessman.gameObject);
+                    }
                     Chessmans[x, y] = selectedChessman;
-
-
                     if (isCheck())
                     {
+
+                        
+                        
                         Destroy(selectedChessman.gameObject);
                         createWhitePiece(selectedChessman, tx, ty);
-
+                        if (blackPiece != null)
+                        {
+                            createBlackPiece(blackPiece, x, y);
+                        }
                         isWhiteturn = b;
 
 
@@ -434,7 +453,10 @@ public class BoardManager : MonoBehaviour
                     }
                     else
                     {
-
+                        ans = 0;
+                        
+                       
+                        
                         isWhiteturn = !b;
                     }
 
@@ -449,12 +471,26 @@ public class BoardManager : MonoBehaviour
                     Chessmans[selectedChessman.CurrentX, selectedChessman.CurrentY] = null;
                     selectedChessman.transform.position = getTitlecenter(x, y);
                     selectedChessman.SetPosition(x, y); //We get the selected position x and position y
+                    
+                    ChessMan whitePiece;
+                    if (Chessmans[x, y] != null)
+                    {
+                        whitePiece = Chessmans[x, y];
+                    }
+                    else
+                    {
+                        whitePiece = null;
+                        //Destroy(selectedChessman.gameObject);
+                    }
                     Chessmans[x, y] = selectedChessman;
                     if (isCheck())
                     {
                         Destroy(selectedChessman.gameObject);
                         createBlackPiece(selectedChessman, tx, ty);
-
+                        if (whitePiece != null)
+                        {
+                            createWhitePiece(whitePiece, x, y);
+                        }
                         isWhiteturn = b;
 
 
@@ -462,6 +498,7 @@ public class BoardManager : MonoBehaviour
                     }
                     else
                     {
+                        ans = 0;
                         isWhiteturn = !b;
                     }
                 }
@@ -478,6 +515,16 @@ public class BoardManager : MonoBehaviour
                     Chessmans[selectedChessman.CurrentX, selectedChessman.CurrentY] = null;
                     selectedChessman.transform.position = getTitlecenter(x, y);
                     selectedChessman.SetPosition(x, y); //We get the selected position x and position y
+                    ChessMan blackPiece1;
+                    if (Chessmans[x, y] != null)
+                    {
+                        blackPiece1 = Chessmans[x, y];
+                    }
+                    else
+                    {
+                        blackPiece1 = null;
+                        //Destroy(selectedChessman.gameObject);
+                    }
                     Chessmans[x, y] = selectedChessman;
 
                     isCheck();
@@ -489,10 +536,14 @@ public class BoardManager : MonoBehaviour
                     else
                     {
 
-
+                        Debug.Log("Check");
                         Destroy(selectedChessman.gameObject);
 
                         createWhitePiece(selectedChessman, tx, ty);
+                        if (blackPiece1 != null)
+                        {
+                            createBlackPiece(blackPiece1, x, y);
+                        }
 
                         isWhiteturn = b;
                     }
@@ -509,6 +560,16 @@ public class BoardManager : MonoBehaviour
                     Chessmans[selectedChessman.CurrentX, selectedChessman.CurrentY] = null;
                     selectedChessman.transform.position = getTitlecenter(x, y);
                     selectedChessman.SetPosition(x, y); //We get the selected position x and position y
+                    ChessMan whitePiece1;
+                    if (Chessmans[x, y] != null)
+                    {
+                        whitePiece1 = Chessmans[x, y];
+                    }
+                    else
+                    {
+                        whitePiece1 = null;
+                        //Destroy(selectedChessman.gameObject);
+                    }
                     Chessmans[x, y] = selectedChessman;
 
                     isCheck();
@@ -524,6 +585,10 @@ public class BoardManager : MonoBehaviour
                         Destroy(selectedChessman.gameObject);
 
                         createBlackPiece(selectedChessman, tx, ty);
+                        if (whitePiece1 != null)
+                        {
+                            createWhitePiece(whitePiece1, x, y);
+                        }
 
                         isWhiteturn = b;
                     }
@@ -531,6 +596,11 @@ public class BoardManager : MonoBehaviour
 
 
             }
+
+            //Test
+
+
+
 
             //isWhiteturn = !isWhiteturn;
             if (isCheck())
@@ -572,9 +642,14 @@ public class BoardManager : MonoBehaviour
                     
                 }
             }
+            
+            
+            
 
         }
         BoardHighlight.Instance.Hidehighlights();
+       
+        
         selectedChessman = null;
     }
 

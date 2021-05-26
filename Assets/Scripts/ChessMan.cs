@@ -6,7 +6,7 @@ public abstract class ChessMan : MonoBehaviour
 {
    public int CurrentX { set; get; }
    public int CurrentY { set; get; }
-   public bool isWhite;
+   public bool isWhite ;
 
     //Update the chessman or chess piece position after every move
    public void SetPosition(int x, int y)
