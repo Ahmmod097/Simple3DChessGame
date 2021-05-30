@@ -157,8 +157,8 @@ public class BoardManager : MonoBehaviour
                 activechessman.Remove(c.gameObject);
                 Pieces.Remove(c);
                 Destroy(c.gameObject);
-                Debug.Log(isCheck());
-                Debug.Log(ans);
+                //Debug.Log(isCheck());
+                //Debug.Log(ans);
                 
                 
             }
@@ -630,6 +630,7 @@ public class BoardManager : MonoBehaviour
                     whiteCheck.SetActive(false);
                     castleCheck = false;
                     castleCheckAt2_0 = isCheckAt_2_0_Position();
+                    
                     castleCheckAt6_0 = isCheckAt_6_0_Position();
                     
                 }
@@ -638,8 +639,10 @@ public class BoardManager : MonoBehaviour
                     blackCheck.SetActive(false);
                     castleCheck = false;
                     castleCheckAt2_0 = isCheckAt_2_0_Position();
+                    
                     castleCheckAt6_0 = isCheckAt_6_0_Position();
                     
+
                 }
             }
             
@@ -916,7 +919,7 @@ public class BoardManager : MonoBehaviour
 
     public void isCheckMate()
     {
-        Debug.Log("Hello");
+        
         if (isWhiteturn)
         {
             whiteCheck.SetActive(false);
@@ -984,37 +987,79 @@ public class BoardManager : MonoBehaviour
 
         if (isWhiteturn)
         {
-           
+
 
             int PosX1 = 3;
             int PosY1 = 0;
             int PosX2 = 2;
             int PosY2 = 0;
-
+            int cntTrue = 0;
+            int cntTrue1 = 0;
+            
+            ChessMan checkPiece = Chessmans[PosX1, PosY1];
+            ChessMan checkPiece1 = Chessmans[PosX2, PosY2];
             //allowedMoves = Chessmans[PosX, PosY].PossibleMove();
-
-
-            for (int i = (Pieces.Count) / 2; i < Pieces.Count; i++)
+            if (checkPiece1 == null)
             {
-                ChessMan piece = Pieces[i];
+                cntTrue = 0;
+                for (int i = (Pieces.Count) / 2; i < Pieces.Count; i++)
+                {
+                    
+                    ChessMan piece = Pieces[i];
+                    
+                    availableMoves = piece.PossibleMove();
 
-                availableMoves = piece.PossibleMove();
 
-                if (availableMoves[PosX1, PosY1] || availableMoves[PosX2, PosY2])
+
+                    
+                    if (availableMoves[PosX2, PosY2])
+                    {
+
+                        cntTrue++;
+                        
+                    }
+
+                }
+                
+            }
+            
+            if (checkPiece == null)
+            {
+                cntTrue1 = 0;
+                for (int i = (Pieces.Count) / 2; i < Pieces.Count; i++)
                 {
 
+                    ChessMan piece = Pieces[i];
+                   
+                    availableMoves = piece.PossibleMove();
 
-                    return true;
+
+
+
+                    if (availableMoves[PosX1, PosY1])
+                    {
+                        
+                        cntTrue1++;
+                        
+                    }
 
                 }
 
-
             }
-            return false;
+
+
+            if (cntTrue == 0 && cntTrue1 == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
-            
+
 
             int PosX1 = 3;
             int PosY1 = 7;
@@ -1022,25 +1067,69 @@ public class BoardManager : MonoBehaviour
             int PosY2 = 7;
 
             //allowedMoves = Chessmans[PosX, PosY].PossibleMove();
+            int cntTrue = 0;
+            int cntTrue1 = 0;
 
+            ChessMan checkPiece = Chessmans[PosX1, PosY1];
+            ChessMan checkPiece1 = Chessmans[PosX2, PosY2];
 
-            for (int i =0; i < (Pieces.Count) / 2; i++)
+            if (checkPiece1 == null)
             {
-                ChessMan piece = Pieces[i];
-
-                availableMoves = piece.PossibleMove();
-
-                if (availableMoves[PosX1, PosY1] || availableMoves[PosX2, PosY2])
+                cntTrue = 0;
+                for (int i = 0; i< (Pieces.Count) / 2; i++)
                 {
 
+                    ChessMan piece = Pieces[i];
 
-                    return true;
+                    availableMoves = piece.PossibleMove();
+
+
+
+
+                    if (availableMoves[PosX2, PosY2])
+                    {
+
+                        cntTrue++;
+
+                    }
 
                 }
 
+            }
+
+            if (checkPiece == null)
+            {
+                cntTrue1 = 0;
+                for (int i = 0; i < (Pieces.Count) / 2; i++)
+                {
+
+                    ChessMan piece = Pieces[i];
+
+                    availableMoves = piece.PossibleMove();
+
+
+
+
+                    if (availableMoves[PosX1, PosY1])
+                    {
+
+                        cntTrue1++;
+
+                    }
+
+                }
 
             }
-            return false;
+
+
+            if (cntTrue == 0 && cntTrue1 == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         } 
 
        
@@ -1052,33 +1141,75 @@ public class BoardManager : MonoBehaviour
 
         if (isWhiteturn)
         {
-            
+
 
             int PosX1 = 5;
             int PosY1 = 0;
             int PosX2 = 6;
             int PosY2 = 0;
+            int cntTrue = 0;
+            int cntTrue1 = 0;
 
+            ChessMan checkPiece = Chessmans[PosX1, PosY1];
+            ChessMan checkPiece1 = Chessmans[PosX2, PosY2];
             //allowedMoves = Chessmans[PosX, PosY].PossibleMove();
-
-
-            for (int i = (Pieces.Count) / 2; i < Pieces.Count; i++)
+            if (checkPiece1 == null)
             {
-                ChessMan piece = Pieces[i];
-
-                availableMoves = piece.PossibleMove();
-
-                if (availableMoves[PosX1, PosY1] || availableMoves[PosX2, PosY2])
+                cntTrue = 0;
+                for (int i = (Pieces.Count) / 2; i < Pieces.Count; i++)
                 {
 
+                    ChessMan piece = Pieces[i];
 
-                    return true;
+                    availableMoves = piece.PossibleMove();
+
+
+
+
+                    if (availableMoves[PosX2, PosY2])
+                    {
+
+                        cntTrue++;
+
+                    }
 
                 }
 
+            }
+
+            if (checkPiece == null)
+            {
+                cntTrue1 = 0;
+                for (int i = (Pieces.Count) / 2; i < Pieces.Count; i++)
+                {
+
+                    ChessMan piece = Pieces[i];
+
+                    availableMoves = piece.PossibleMove();
+
+
+
+
+                    if (availableMoves[PosX1, PosY1])
+                    {
+
+                        cntTrue1++;
+
+                    }
+
+                }
 
             }
-            return false;
+
+
+            if (cntTrue == 0 && cntTrue1 == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
@@ -1090,27 +1221,70 @@ public class BoardManager : MonoBehaviour
             int PosY2 = 7;
 
             //allowedMoves = Chessmans[PosX, PosY].PossibleMove();
+            int cntTrue = 0;
+            int cntTrue1 = 0;
 
+            ChessMan checkPiece = Chessmans[PosX1, PosY1];
+            ChessMan checkPiece1 = Chessmans[PosX2, PosY2];
 
-            for (int i = 0; i < (Pieces.Count) / 2; i++)
+            if (checkPiece1 == null)
             {
-                ChessMan piece = Pieces[i];
-
-                availableMoves = piece.PossibleMove();
-
-                if (availableMoves[PosX1, PosY1] || availableMoves[PosX2, PosY2])
+                cntTrue = 0;
+                for (int i = 0; i < (Pieces.Count) / 2; i++)
                 {
 
+                    ChessMan piece = Pieces[i];
 
-                    return true;
+                    availableMoves = piece.PossibleMove();
+
+
+
+
+                    if (availableMoves[PosX2, PosY2])
+                    {
+
+                        cntTrue++;
+
+                    }
 
                 }
 
+            }
+
+            if (checkPiece == null)
+            {
+                cntTrue1 = 0;
+                for (int i = 0; i < (Pieces.Count) / 2; i++)
+                {
+
+                    ChessMan piece = Pieces[i];
+
+                    availableMoves = piece.PossibleMove();
+
+
+
+
+                    if (availableMoves[PosX1, PosY1])
+                    {
+
+                        cntTrue1++;
+
+                    }
+
+                }
 
             }
-            return false;
+
+
+            if (cntTrue == 0 && cntTrue1 == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-       
 
 
     }

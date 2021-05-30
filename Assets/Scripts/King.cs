@@ -101,8 +101,10 @@ public class King : ChessMan
 
         //Debug.Log( whiteKingCastlingCheck);
         //Castling Move For White King
-       
-        if (CurrentX == 4 && CurrentY == 0 && checkWhiteCastling==true && kingCastlingCheck == false) //&& whiteKingCastlingCheck == false) //Only Applicable for White king left side castling
+        //Debug.Log(kingCastlingCheck);
+        //Debug.Log(kingCastlingCheckAt2_0);
+        //Debug.Log(kingCastlingCheckAt6_0);
+        if (CurrentX == 4 && CurrentY == 0 && checkWhiteCastling==true && kingCastlingCheck == false) //whiteKingCastlingCheck == false) //Only Applicable for White king left side castling
         {
 
             
@@ -114,19 +116,19 @@ public class King : ChessMan
             
             if ((c == null && c1 == null && c2 == null) && (c3 == null && c4 == null) &&
                 whiteKingMoveCount == false && whiteRightRookMoveCount == false && whiteLeftRookMoveCount == false &&
-                kingCastlingCheckAt2_0 == false && kingCastlingCheckAt6_0 == false)
+                kingCastlingCheckAt2_0 == true && kingCastlingCheckAt6_0 == true)
             {
                 r[CurrentX - 2, CurrentY] = true;
                 r[CurrentX + 2, CurrentY] = true;
 
             }
             else if(c3 == null && c4 == null && whiteRightRookMoveCount == false && whiteKingMoveCount == false 
-               && kingCastlingCheckAt6_0 == false)
+               && kingCastlingCheckAt6_0 == true)
             {
                 r[CurrentX + 2, CurrentY] = true;
             }
             else if(c == null && c1 == null && c2 == null && whiteLeftRookMoveCount == false && whiteKingMoveCount == false 
-                && kingCastlingCheckAt2_0 == false)
+                && kingCastlingCheckAt2_0 == true)
             {
                 r[CurrentX - 2, CurrentY] = true;
             }
@@ -146,19 +148,19 @@ public class King : ChessMan
 
             if ((c == null && c1 == null && c2 == null) && (c3 == null && c4 == null) &&
                 blackKingMoveCount == false && blackRightRookMoveCount == false && blackLeftRookMoveCount == false
-                && kingCastlingCheckAt2_0 == false && kingCastlingCheckAt6_0 == false)
+                && kingCastlingCheckAt2_0 == true && kingCastlingCheckAt6_0 == true)
             {
                 r[CurrentX - 2, CurrentY] = true;
                 r[CurrentX + 2, CurrentY] = true;
 
             }
             else if (c3 == null && c4 == null && blackRightRookMoveCount == false && 
-                blackKingMoveCount == false &&  kingCastlingCheckAt6_0 == false)
+                blackKingMoveCount == false &&  kingCastlingCheckAt6_0 == true)
             {
                 r[CurrentX + 2, CurrentY] = true;
             }
             else if (c == null && c1 == null && c2 == null && blackLeftRookMoveCount == false && blackKingMoveCount == false
-                && kingCastlingCheckAt2_0 == false)
+                && kingCastlingCheckAt2_0 == true)
             {
                 r[CurrentX - 2, CurrentY] = true;
             }
